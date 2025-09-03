@@ -91,7 +91,8 @@ export default function LoginPage() {
 
               // Redirect to events/dashboard
 
-              console.log(data?.user?.companyId)
+              console.log("id",data)
+              
 
 
               if (data?.user?.role === 'ADMIN' || data?.user?.role === 'ORGANIZER') {
