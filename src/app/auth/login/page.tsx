@@ -46,24 +46,24 @@ export default function LoginPage() {
 
 
 
-  const setData = async (companyId: number,token: string, helpers: any) => {
-      try {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}company/${companyId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    
-    setCompany(res.data.data);
-    localStorage.setItem("comapny", res.data.data);
+  const setData = async (companyId: number, token: string, helpers: any) => {
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}company/${companyId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-    router.push("/admin/dashboard");
-  } catch (err: any) {
-    console.error("Error fetching company:", err.response?.data || err.message);
-  }finally {
-    helpers.setSubmitting(false);
-  }
+      setCompany(res.data.data);
+      localStorage.setItem("comapny", res.data.data);
+
+      router.push("/admin/dashboard");
+    } catch (err: any) {
+      console.error("Error fetching company:", err.response?.data || err.message);
+    } finally {
+      helpers.setSubmitting(false);
+    }
 
   }
 
@@ -92,18 +92,24 @@ export default function LoginPage() {
               // Redirect to events/dashboard
 
               console.log(data?.user?.companyId)
-              
+
 
               if (data?.user?.role === 'ADMIN' || data?.user?.role === 'ORGANIZER') {
-                data?.user?.companyId!==null ? setData(data?.user?.companyId,data?.token, helpers) : router.push("/onboarding");
+                if (!data?.user?.companyId) {
+                  // companyId is null, undefined, or empty
+                  router.push("/onboarding");
+                } else {
+                  setData(data?.user?.companyId, data?.token, helpers);
+                }
                 helpers.setSubmitting(false);
-              }else if(data?.user?.role === 'PARTICIPANT'){
+              }
+              else if (data?.user?.role === 'PARTICIPANT') {
                 router.push("/participant/dashboard");
                 helpers.setSubmitting(false);
               }
             } catch (err: any) {
               helpers.setStatus(err?.response?.data?.error || "Login failed");
-            } 
+            }
           }}
         >
           {({ isSubmitting, errors, touched, status }) => (
