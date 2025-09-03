@@ -48,7 +48,7 @@ import {
     FaForward,
     FaStar,
     FaArrowRight,
-    
+
 } from "react-icons/fa";
 import Header from "@/components/layout/Header";
 import { useCompanyStore } from "@/utils/stores/useCompanyStore";
@@ -84,7 +84,7 @@ const steps = [
 ];
 
 export default function OnboardingPage() {
-    const { user } = useUserStore();
+    const { user,setUser } = useUserStore();
     const toast = useToast();
     const router = useRouter();
     const { company, setCompany } = useCompanyStore();
@@ -187,34 +187,42 @@ export default function OnboardingPage() {
         onOpen();
     };
 
-    const handleFinalLaunch = async (companyId: number,token: string) => {
+    const handleFinalLaunch = async (companyId: number, token: string) => {
 
         try {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}company/${companyId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    
-    setCompany(res.data.data);
-    localStorage.setItem("comapny", res.data.data);
-      onClose();
-        toast({
-            title: "Welcome to Wizard Productions! ✨",
-            description: "Your journey begins now. Let's create amazing events together!",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-            position: "top"
-        });
-    router.push("/admin/dashboard");
-  } catch (err: any) {
-    console.error("Error fetching company:", err.response?.data || err.message);
-  }finally {
-    onClose();
-  }
-   router.push("/admin/dashboard");
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}company/${companyId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            setCompany(res.data.data);
+            localStorage.setItem("comapny", res.data.data);
+            setUser({
+                user: {
+                    ...user?.user,
+                    companyId: companyId,   // overwrite here
+                },
+                token: user?.token,
+            });
+
+            onClose();
+            toast({
+                title: "Welcome to Wizard Productions! ✨",
+                description: "Your journey begins now. Let's create amazing events together!",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: "top"
+            });
+            router.push("/admin/dashboard");
+        } catch (err: any) {
+            console.error("Error fetching company:", err.response?.data || err.message);
+        } finally {
+            onClose();
+        }
+        router.push("/admin/dashboard");
     };
 
     const getProgressValue = () => {
@@ -755,7 +763,7 @@ export default function OnboardingPage() {
                             colorScheme="yellow"
                             size="lg"
                             w="full"
-                            onClick={()=>{handleFinalLaunch(company?.data?.id, user?.token)}}
+                            onClick={() => { handleFinalLaunch(company?.data?.id, user?.token) }}
                             rightIcon={<Icon as={FaStar} />}
                             _hover={{
                                 transform: "translateY(-2px)",
