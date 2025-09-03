@@ -91,6 +91,9 @@ export default function LoginPage() {
 
               // Redirect to events/dashboard
 
+              console.log(data?.user?.companyId)
+              
+
               if (data?.user?.role === 'ADMIN' || data?.user?.role === 'ORGANIZER') {
                 data?.user?.companyId!==null ? setData(data?.user?.companyId,data?.token, helpers) : router.push("/onboarding");
                 helpers.setSubmitting(false);
