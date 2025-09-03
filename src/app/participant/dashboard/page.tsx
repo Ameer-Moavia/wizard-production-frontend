@@ -115,9 +115,9 @@ const ParticipantDashboard: React.FC<ParticipantDashboardProps> = () => {
     const tabBg = useColorModeValue("gray.700", "gray.800");
 
     useEffect(() => {
-        if (user?.user?.partticipations) {
+        if (user?.user?.participations) {
             // Transform the participations from the user store
-            const userParticipations = user?.user?.partticipations.map((p: Participation) => ({
+            const userParticipations = user?.user?.participations.map((p: Participation) => ({
                 ...p,
                 status: p.status as 'PENDING' | 'CONFIRMED' | 'REJECTED' | 'CANCELLED'
             }));
