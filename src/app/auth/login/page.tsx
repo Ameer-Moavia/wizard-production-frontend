@@ -90,6 +90,7 @@ export default function LoginPage() {
               localStorage.setItem("user", data);
 
               // Redirect to events/dashboard
+              
               if (data?.user?.role === 'ADMIN' || data?.user?.role === 'ORGANIZER') {
                 data?.user?.companyId ? setData(data?.user?.companyId,data?.token, helpers) : router.push("/onboarding");
                 helpers.setSubmitting(false);

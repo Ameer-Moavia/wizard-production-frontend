@@ -68,7 +68,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     // ✅ onboarding routes
     if (pathname.startsWith("/onboarding")) {
       if (user.user.role === "ADMIN" || user.user.role === "ORGANIZER") {
-        if (!user?.user?.companyId || user?.user?.companyId === 0) {
+        if (user?.user?.companyId==null || user?.user?.companyId === 0) {
           return;
         } else {
           router.push("/admin/dashboard");
